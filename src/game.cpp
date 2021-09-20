@@ -568,9 +568,6 @@ bool Game::placeCreature(Creature* creature, const Position& pos, bool extendedP
 		if (Player* tmpPlayer = spectator->getPlayer()) {
 			tmpPlayer->sendCreatureAppear(creature, creature->getPosition(), true);
 		}
-	}
-
-	for (Creature* spectator : spectators) {
 		spectator->onCreatureAppear(creature, true);
 	}
 
