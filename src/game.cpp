@@ -3575,19 +3575,27 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit)
 		}
 
 		if (!player->hasMount(mount)) {
-			return;
-		}
+            return;
+        }
 
-		int32_t speedChange = mount->speed;
-		if (player->isMounted()) {
-			Mount* prevMount = mounts.getMountByID(player->getCurrentMount());
-			if (prevMount) {
-				speedChange -= prevMount->speed;
-			}
-		}
+        bool isMounted = false;
+        int32_t speedChange = mount->speed;
+        if (player->isMounted()) {
+            Mount* prevMount = mounts.getMountByID(player->getCurrentMount());
+            if (prevMount) {
+                changeSpeed(player, mount->speed - prevMount->speed);
+            }
+            isMounted = true;
+            player->setCurrentMount(mount->id);
+        } else {
+            player->setCurrentMount(mount->id);
+            outfit.lookMount = 0;
+        }
 
-		changeSpeed(player, speedChange);
-		player->setCurrentMount(mount->id);
+        if (isMounted) {
+            changeSpeed(player, speedChange);
+        }
+        player->setCurrentMount(mount->id);
 	} else if (player->isMounted()) {
 		player->dismount();
 	}
