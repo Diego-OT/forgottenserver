@@ -40,6 +40,7 @@
 #include "enums.h"
 #include "position.h"
 #include "outfit.h"
+#include "mounts.h"
 
 class Thing;
 class Creature;
@@ -74,6 +75,7 @@ enum LuaDataType {
 	LuaData_Item,
 	LuaData_Container,
 	LuaData_Teleport,
+	LuaData_Podium,
 	LuaData_Player,
 	LuaData_Monster,
 	LuaData_Npc,
@@ -396,6 +398,7 @@ class LuaScriptInterface
 		static void pushPosition(lua_State* L, const Position& position, int32_t stackpos = 0);
 		static void pushOutfit(lua_State* L, const Outfit_t& outfit);
 		static void pushOutfit(lua_State* L, const Outfit* outfit);
+		static void pushMount(lua_State* L, const Mount* mount);
 		static void pushLoot(lua_State* L, const std::vector<LootBlock>& lootList);
 
 		//
@@ -553,9 +556,12 @@ class LuaScriptInterface
 		static int luaGameGetNpcCount(lua_State* L);
 		static int luaGameGetMonsterTypes(lua_State* L);
 		static int luaGameGetCurrencyItems(lua_State* L);
+		static int luaGameGetMountIdByLookType(lua_State* L);
 
 		static int luaGameGetTowns(lua_State* L);
 		static int luaGameGetHouses(lua_State* L);
+		static int luaGameGetOutfits(lua_State* L);
+		static int luaGameGetMounts(lua_State* L);
 
 		static int luaGameGetGameState(lua_State* L);
 		static int luaGameSetGameState(lua_State* L);
@@ -659,8 +665,11 @@ class LuaScriptInterface
 
 		static int luaNetworkMessageAddByte(lua_State* L);
 		static int luaNetworkMessageAddU16(lua_State* L);
+		static int luaNetworkMessageAddI16(lua_State* L);
 		static int luaNetworkMessageAddU32(lua_State* L);
+		static int luaNetworkMessageAddI32(lua_State* L);
 		static int luaNetworkMessageAddU64(lua_State* L);
+		static int luaNetworkMessageAddI64(lua_State* L);
 		static int luaNetworkMessageAddString(lua_State* L);
 		static int luaNetworkMessageAddPosition(lua_State* L);
 		static int luaNetworkMessageAddDouble(lua_State* L);
@@ -753,6 +762,8 @@ class LuaScriptInterface
 		static int luaItemHasProperty(lua_State* L);
 		static int luaItemIsLoadedFromMap(lua_State* L);
 
+		static int luaItemIsMarketable(lua_State* L);
+
 		static int luaItemSetStoreItem(lua_State* L);
 		static int luaItemIsStoreItem(lua_State* L);
 
@@ -777,6 +788,16 @@ class LuaScriptInterface
 
 		static int luaTeleportGetDestination(lua_State* L);
 		static int luaTeleportSetDestination(lua_State* L);
+
+		// Podium
+		static int luaPodiumCreate(lua_State* L);
+
+		static int luaPodiumGetOutfit(lua_State* L);
+		static int luaPodiumSetOutfit(lua_State* L);
+		static int luaPodiumHasFlag(lua_State* L);
+		static int luaPodiumSetFlag(lua_State* L);
+		static int luaPodiumGetDirection(lua_State* L);
+		static int luaPodiumSetDirection(lua_State* L);
 
 		// Creature
 		static int luaCreatureCreate(lua_State* L);
@@ -955,6 +976,7 @@ class LuaScriptInterface
 
 		static int luaPlayerGetBankBalance(lua_State* L);
 		static int luaPlayerSetBankBalance(lua_State* L);
+		static int luaPlayerSendResourceBalance(lua_State* L);
 
 		static int luaPlayerGetStorageValue(lua_State* L);
 		static int luaPlayerSetStorageValue(lua_State* L);
@@ -987,6 +1009,8 @@ class LuaScriptInterface
 		static int luaPlayerHasOutfit(lua_State* L);
 		static int luaPlayerCanWearOutfit(lua_State* L);
 		static int luaPlayerSendOutfitWindow(lua_State* L);
+
+		static int luaPlayerSendEditPodium(lua_State* L);
 
 		static int luaPlayerAddMount(lua_State* L);
 		static int luaPlayerRemoveMount(lua_State* L);
@@ -1196,6 +1220,7 @@ class LuaScriptInterface
 		static int luaItemTypeGetGroup(lua_State* L);
 		static int luaItemTypeGetId(lua_State* L);
 		static int luaItemTypeGetClientId(lua_State* L);
+		static int luaItemTypeGetWareId(lua_State* L);
 		static int luaItemTypeGetName(lua_State* L);
 		static int luaItemTypeGetPluralName(lua_State* L);
 		static int luaItemTypeGetArticle(lua_State* L);
