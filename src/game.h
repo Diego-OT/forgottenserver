@@ -419,7 +419,7 @@ class Game
 		void playerEnableSharedPartyExperience(uint32_t playerId, bool sharedExpActive);
 		void playerToggleMount(uint32_t playerId, bool mount);
 		void playerLeaveMarket(uint32_t playerId);
-		void playerBrowseMarket(uint32_t playerId, uint16_t spriteId);
+		void playerBrowseMarket(uint32_t playerId, uint16_t spriteId, bool version1280 = false);
 		void playerBrowseMarketOwnOffers(uint32_t playerId);
 		void playerBrowseMarketOwnHistory(uint32_t playerId);
 		void playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t spriteId, uint16_t amount, uint64_t price, bool anonymous);
