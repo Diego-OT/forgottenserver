@@ -5200,7 +5200,7 @@ void Game::playerLeaveMarket(uint32_t playerId)
 	player->setInMarket(false);
 }
 
-void Game::playerBrowseMarket(uint32_t playerId, uint16_t spriteId)
+void Game::playerBrowseMarket(uint32_t playerId, uint16_t spriteId, bool version1280)
 {
 	Player* player = getPlayerByID(playerId);
 	if (!player) {
@@ -5220,8 +5220,8 @@ void Game::playerBrowseMarket(uint32_t playerId, uint16_t spriteId)
 		return;
 	}
 
-	const MarketOfferList& buyOffers = IOMarket::getActiveOffers(MARKETACTION_BUY, it.id);
-	const MarketOfferList& sellOffers = IOMarket::getActiveOffers(MARKETACTION_SELL, it.id);
+	const MarketOfferList& buyOffers = IOMarket::getActiveOffers(MARKETACTION_BUY, it.id, version1280);
+	const MarketOfferList& sellOffers = IOMarket::getActiveOffers(MARKETACTION_SELL, it.id, version1280);
 	player->sendMarketBrowseItem(it.id, buyOffers, sellOffers);
 	g_events->eventPlayerOnLookInMarket(player, &it);
 }
