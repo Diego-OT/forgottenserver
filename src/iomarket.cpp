@@ -32,7 +32,7 @@
 extern ConfigManager g_config;
 extern Game g_game;
 
-MarketOfferList IOMarket::getActiveOffers(MarketAction_t action, uint16_t itemId)
+MarketOfferList IOMarket::getActiveOffers(MarketAction_t action, uint16_t itemId, bool version1280)
 {
 	MarketOfferList offerList;
 
@@ -54,6 +54,10 @@ MarketOfferList IOMarket::getActiveOffers(MarketAction_t action, uint16_t itemId
 		} else {
 			offer.playerName = "Anonymous";
 		}
+		// no display bugged price on old versions
+		if (!version1280 && offer.price > 999999999) {
+    		continue;
+    	}
 		offerList.push_back(offer);
 	} while (result->next());
 	return offerList;
