@@ -2025,32 +2025,49 @@ void ProtocolGame::sendMarketBrowseItem(uint16_t itemId, const MarketOfferList& 
 {
 	sendStoreBalance();
 
-	NetworkMessage msg;
-	msg.addByte(0xF9);
-	msg.addByte(MARKETREQUEST_ITEM);
-	msg.addItemId(itemId);
+	bool version1280 = false;
+    if (version >= 1280) {
+    	version1280 = true;
+    }
 
-	if (Item::items[itemId].classLevel > 0) {
-		msg.addByte(0); // item tier
-	}
+    NetworkMessage msg;
+    msg.addByte(0xF9);
+    if (version1280) {
+    	msg.addByte(MARKETREQUEST_ITEM);
+    }
+    msg.addItemId(itemId);
 
+    if (version1280) {
+    	if (Item::items[itemId].classLevel > 0) {
+			msg.addByte(0); // item tier
+		}
+    }
+   
 	msg.add<uint32_t>(buyOffers.size());
-	for (const MarketOffer& offer : buyOffers) {
-		msg.add<uint32_t>(offer.timestamp);
-		msg.add<uint16_t>(offer.counter);
-		msg.add<uint16_t>(offer.amount);
-		msg.add<uint64_t>(offer.price);
-		msg.addString(offer.playerName);
-	}
+    for (const MarketOffer& offer : buyOffers) {    	
+        msg.add<uint32_t>(offer.timestamp);
+        msg.add<uint16_t>(offer.counter);
+        msg.add<uint16_t>(offer.amount);
+        if (version1280) {
+	        msg.add<uint64_t>(offer.price);
+	    } else {    	
+	        msg.add<uint32_t>(offer.price);
+	    }
+        msg.addString(offer.playerName);
+    }
 
-	msg.add<uint32_t>(sellOffers.size());
-	for (const MarketOffer& offer : sellOffers) {
-		msg.add<uint32_t>(offer.timestamp);
-		msg.add<uint16_t>(offer.counter);
-		msg.add<uint16_t>(offer.amount);
-		msg.add<uint64_t>(offer.price);
-		msg.addString(offer.playerName);
-	}
+    msg.add<uint32_t>(sellOffers.size());
+    for (const MarketOffer& offer : sellOffers) {
+        msg.add<uint32_t>(offer.timestamp);
+        msg.add<uint16_t>(offer.counter);
+        msg.add<uint16_t>(offer.amount);
+        if (version1280) {
+	        msg.add<uint64_t>(offer.price);
+	    } else {    	
+	        msg.add<uint32_t>(offer.price);
+	    }
+        msg.addString(offer.playerName);
+    }
 
 	writeToOutputBuffer(msg);
 }
