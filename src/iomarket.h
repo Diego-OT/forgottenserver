@@ -31,7 +31,7 @@ class IOMarket
 			return instance;
 		}
 
-		static MarketOfferList getActiveOffers(MarketAction_t action, uint16_t itemId);
+		static MarketOfferList getActiveOffers(MarketAction_t action, uint16_t itemId, bool version1280 = false);
 		static MarketOfferList getOwnOffers(MarketAction_t action, uint32_t playerId);
 		static HistoryMarketOfferList getOwnHistory(MarketAction_t action, uint32_t playerId);
 
